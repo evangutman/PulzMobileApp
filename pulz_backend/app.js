@@ -1,3 +1,21 @@
+/*---------
+--Author:
+--Evan Gutman
+---------------
+---------------
+--Date Started:
+--2/1/18
+---------------
+----------------
+--Date Last Modified:
+--03/05/18
+----------------
+----------------
+--Version:
+--Alpha 1.0
+----------------
+*/
+
 var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -8,10 +26,9 @@ var mysql = require('mysql');
 
 
 var users = require('./routes/users');
-var signup = require('./routes/signup');
-var addEmployee = require('./routes/addEmployee');
-var client = require('./routes/client');
-var calendar = require('./routes/calendar');
+var employees = require('./routes/employees');
+var clients = require('./routes/clients');
+var appointments = require('./routes/appointments');
 
 var app = express();
 
@@ -27,14 +44,12 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/users', users);
-app.use('/signup', signup);
-app.use('/addEmployee', addEmployee);
-app.use('/addEmployee/list', addEmployee);
-app.use('/client', client);
-app.use('/client/addClient', client);
-app.use('/calendar', calendar);
-app.use('/calendar/addEvent', calendar);
+app.use('/employees', employees);
+app.use('/clients', clients);
+app.use('/appointments', appointments);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -4,11 +4,11 @@
 ---------------
 ---------------
 --Date Started:
---2/1/18
+--2/25/18
 ---------------
 ----------------
 --Date Last Modified:
---02/13/18
+--03/4/18
 ----------------
 ----------------
 --Version:
@@ -43,6 +43,7 @@ export default class Calendar extends Component<{}> {
     this.state = {
       //SELECT EXTRACT(YEAR_MONTH FROM "2017-06-15 09:34:21");
       month: '',
+      year: '',
       emp: '',
       items: {}
     }
@@ -55,7 +56,7 @@ export default class Calendar extends Component<{}> {
   }
 
 
-  loadMonthItems(theDate) {
+  loadMonthItems(theDate, theYear) {
     //adjusting for javascript date object
     if(theDate == 12){
       theDate = 1;
@@ -63,10 +64,13 @@ export default class Calendar extends Component<{}> {
       theDate++;
     }
 
-    console.log("LoadMonthItems says: " + theDate);
-    this.setState({month: String(theDate)});
+    console.log("LoadMonthItems says: " + theDate + theYear);
+    this.setState({
+      month: String(theDate),
+      year: String(theYear)
+    });
 
-    return fetch('http://127.0.0.1:3000/calendar', {
+    return fetch('http://127.0.0.1:3000/appointments', {
       method: 'POST',
       headers: {
         'Accept': 'Application/json',
@@ -74,30 +78,38 @@ export default class Calendar extends Component<{}> {
       },
       body: JSON.stringify({
         emp: this.state.emp,
-        month: this.state.month
+        month: this.state.month,
+        year: this.state.year
       })
     })
     .then( (response) => response.json())
     .then( (res) => {
-      console.log(res.message);
-      var dat = res.message;
-      var obj = {}
-      for (i = 0; i < dat.length; i++) {
-        tempDate = dat[i]['date'];
-        tempDate = tempDate.slice(0,10);
 
-        if (obj.hasOwnProperty(tempDate)){  //if date already exists in object, append to value array
-          obj[tempDate].push({apt_ID: dat[i]['apt_ID'], b_ID: dat[i]['b_ID'], e_ID: dat[i]['e_ID'], c_ID: dat[i]['c_ID'], details: dat[i]['details']});
-        } else {
-          obj[tempDate] = [{apt_ID: dat[i]['apt_ID'], b_ID: dat[i]['b_ID'], e_ID: dat[i]['e_ID'], c_ID: dat[i]['c_ID'], details: dat[i]['details']}];
+      if(res.success == true) {
+        console.log(res.message);
+        var dat = res.message;
+        var obj = {}
+        for (i = 0; i < dat.length; i++) {
+          tempDate = dat[i]['date'];
+          tempDate = tempDate.slice(0,10);
+
+          if (obj.hasOwnProperty(tempDate)){  //if date already exists in object, append value to array
+            obj[tempDate].push({apt_ID: dat[i]['apt_ID'], b_ID: dat[i]['b_ID'], e_ID: dat[i]['e_ID'], c_ID: dat[i]['c_ID'], details: dat[i]['details']});
+          } else {
+            obj[tempDate] = [{apt_ID: dat[i]['apt_ID'], b_ID: dat[i]['b_ID'], e_ID: dat[i]['e_ID'], c_ID: dat[i]['c_ID'], details: dat[i]['details']}];
+          }
+
         }
+        console.log(obj);
+        this.setState({
+          items: Object.assign({}, this.state.items, obj)
+        })
+        console.log(this.state.items);
 
+      } else {
+        console.log(res.message);
       }
-      console.log(obj);
-      this.setState({
-        items: Object.assign({}, this.state.items, obj)
-      })
-      console.log(this.state.items);
+
     })
     .done();
 
@@ -105,18 +117,22 @@ export default class Calendar extends Component<{}> {
 
 
   render() {
-    //this.loadMonthItems(month['month'])
+
     return(
       <View style = {styles.container}>
         <Agenda
           items = {this.state.items}
-          loadItemsForMonth = { (month) => {this.loadMonthItems(month['month'])} }
+          loadItemsForMonth = { (month) => {
+            this.loadMonthItems(month['month'], month['year'])
+          }}
           onDayPress = { (day) => {console.log("day pressed")}}
           renderItem={(item, firstItemInDay) => {
             return (
               <View >
                 <Text>{item.text}</Text>
-              </View>);}}
+              </View>
+            );
+          }}
           rowHasChanged={(r1, r2) => {return r1.text !== r2.text}}
           renderEmptyDate={() => {return (<View><Text>No Jobs Scheduled Today</Text></View>);}}
           renderEmptyData = {() => {return (<View><Text>No Jobs Scheduled Today</Text></View>);}}

@@ -1,3 +1,21 @@
+/*---------
+--Author:
+--Evan Gutman
+---------------
+---------------
+--Date Started:
+--2/15/18
+---------------
+----------------
+--Date Last Modified:
+--02/24/18
+----------------
+----------------
+--Version:
+--Alpha 1.0
+----------------
+*/
+
 import React, { Component } from 'react';
 import {
   Platform,
@@ -36,9 +54,7 @@ export default class NewClient extends Component<{}> {
 
         <View style = {styles.container}>
 
-
             <Text style = {styles.header}>- Add a Client -</Text>
-
 
           <TextInput
             style = {styles.TextInput}
@@ -52,26 +68,23 @@ export default class NewClient extends Component<{}> {
           onChangeText = { (address) => this.setState({address})}
           />
 
-          <TouchableOpacity
-            style = {styles.botton}
-            onPress = { this.submit }
-          >
-          <View>
-            <Text>Add Client</Text>
-          </View>
+          <TouchableOpacity style = {styles.botton} onPress = { this.submit }>
+
+            <View>
+              <Text>Add Client</Text>
+            </View>
+
           </TouchableOpacity>
 
         </View>
+
       </KeyboardAvoidingView>
-
-
-
 
     );
   }
 
   submit = () => {
-    fetch('http://127.0.0.1:3000/client/addClient', {
+    fetch('http://127.0.0.1:3000/clients/add', {
       method: 'POST',
       headers: {
         'Accept': 'Application/json',

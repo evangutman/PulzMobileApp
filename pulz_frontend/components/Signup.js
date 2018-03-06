@@ -1,6 +1,25 @@
+/*---------
+--Author:
+--Evan Gutman
+---------------
+---------------
+--Date Started:
+--2/3/18
+---------------
+----------------
+--Date Last Modified:
+--03/1/18
+----------------
+----------------
+--Version:
+--Alpha 1.0
+----------------
+
+*/
+
+
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -11,7 +30,7 @@ import {
   Alert,
   Image,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import { Actions } from 'react-native-router-flux';
 
 export default class Signup extends Component<{}> {
 
@@ -32,55 +51,52 @@ export default class Signup extends Component<{}> {
 
         <View style = {styles.container}>
 
+          <Text style = {styles.cancel} onPress = { () => Actions.pop() }>Cancel</Text>
 
-            <Text style = {styles.header}>- SignUp -</Text>
-
+          <Text style = {styles.header}>- SignUp -</Text>
 
           <TextInput
             style = {styles.TextInput}
             placeholder = 'Email'
-            onChangeText = { (email) => this.setState({email})}
+            onChangeText = { (eMail) => this.setState({email: eMail})}
           />
 
           <TextInput
             style = {styles.TextInput}
             placeholder = 'Password'
-            onChangeText = { (password) => this.setState({password})}
+            onChangeText = { (pass) => this.setState({password: pass})}
             secureTextEntry = {true}
           />
 
           <TextInput
             style = {styles.TextInput}
             placeholder = 'Business Name'
-            onChangeText = { (bname) => this.setState({bname})}
+            onChangeText = { (businessName) => this.setState({bname: businessName})}
           />
 
           <TextInput
             style = {styles.TextInput}
             placeholder = 'Full Name'
-            onChangeText = { (name) => this.setState({name})}
+            onChangeText = { (fullName) => this.setState({name: fullName})}
           />
 
-          <TouchableOpacity
-            style = {styles.botton}
-            onPress = { this.register }
-          >
-          <View>
-            <Text>Register</Text>
-          </View>
+          <TouchableOpacity style = {styles.botton} onPress = { this.register }>
+
+            <View>
+              <Text>Register</Text>
+            </View>
+
           </TouchableOpacity>
 
         </View>
+
       </KeyboardAvoidingView>
-
-
-
 
     );
   }
 
   register = () => {
-    fetch('http://127.0.0.1:3000/signup', {
+    fetch('http://127.0.0.1:3000/users/add', {
       method: 'POST',
       headers: {
         'Accept': 'Application/json',
@@ -98,7 +114,7 @@ export default class Signup extends Component<{}> {
 
       if (res.success === true) {
         AsyncStorage.setItem('user', res.user);
-        this.props.navigation.navigate('NavBar');
+        Actions.login();
       } else {
         Alert.alert(res.message);
       }
@@ -136,5 +152,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#d5928d',
     padding: 20,
     alignItems: 'center'
+  },
+  cancel: {
+    alignSelf: 'flex-end',
+    marginTop: 0,
   }
 });

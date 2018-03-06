@@ -1,3 +1,25 @@
+/*---------
+--Author:
+--Evan Gutman
+---------------
+---------------
+--Date Started:
+--2/10/18
+---------------
+----------------
+--Date Last Modified:
+--03/4/18
+----------------
+----------------
+--Version:
+--Alpha 1.0
+----------------
+
+TODO: implement search bar
+*/
+
+
+
 import React, { Component } from 'react';
 import {
   Platform,
@@ -40,7 +62,7 @@ export default class Employees extends Component<{}> {
   }
 
   getList = () => {
-    return fetch('http://127.0.0.1:3000/addEmployee/list', {
+    return fetch('http://127.0.0.1:3000/employees', {
       method: 'POST',
       headers: {
         'Accept': 'Application/json',

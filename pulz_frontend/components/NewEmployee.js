@@ -1,6 +1,23 @@
+/*---------
+--Author:
+--Evan Gutman
+---------------
+---------------
+--Date Started:
+--2/11/18
+---------------
+----------------
+--Date Last Modified:
+--02/27/18
+----------------
+----------------
+--Version:
+--Alpha 1.0
+----------------
+*/
+
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -9,9 +26,7 @@ import {
   TouchableOpacity,
   AsyncStorage,
   Alert,
-  Image,
 } from 'react-native';
-import { StackNavigator } from 'react-navigation';
 import { Actions } from 'react-native-router-flux';
 
 export default class NewEmployee extends Component<{}> {
@@ -35,9 +50,7 @@ export default class NewEmployee extends Component<{}> {
 
         <View style = {styles.container}>
 
-
             <Text style = {styles.header}>- Add an Employee -</Text>
-
 
           <TextInput
             style = {styles.TextInput}
@@ -46,26 +59,23 @@ export default class NewEmployee extends Component<{}> {
           />
 
 
-          <TouchableOpacity
-            style = {styles.botton}
-            onPress = { this.submit }
-          >
-          <View>
-            <Text>Add Employee</Text>
-          </View>
+          <TouchableOpacity style = {styles.botton} onPress = { this.submit }>
+
+            <View>
+              <Text>Add Employee</Text>
+            </View>
+
           </TouchableOpacity>
 
         </View>
+
       </KeyboardAvoidingView>
-
-
-
 
     );
   }
 
   submit = () => {
-    fetch('http://127.0.0.1:3000/addEmployee', {
+    fetch('http://127.0.0.1:3000/employees/add', {
       method: 'POST',
       headers: {
         'Accept': 'Application/json',

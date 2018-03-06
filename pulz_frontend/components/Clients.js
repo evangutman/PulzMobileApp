@@ -1,6 +1,23 @@
+/*---------
+--Author:
+--Evan Gutman
+---------------
+---------------
+--Date Started:
+--2/15/18
+---------------
+----------------
+--Date Last Modified:
+--03/4/18
+----------------
+----------------
+--Version:
+--Alpha 1.0
+----------------
+*/
+
 import React, { Component } from 'react';
 import {
-  Platform,
   StyleSheet,
   Text,
   View,
@@ -14,8 +31,6 @@ import {
   FlatList
 } from 'react-native';
 import { List, ListItem } from 'react-native-elements';
-import BottomNavigation, { Tab } from 'react-native-material-bottom-navigation';
-import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default class Clients extends Component<{}> {
 
@@ -33,7 +48,7 @@ export default class Clients extends Component<{}> {
     }
 
     getList = () => {
-      return fetch('http:/127.0.0.1:3000/client', {
+      return fetch('http:/127.0.0.1:3000/clients', {
         method: 'POST',
         headers: {
           'Accept': 'Application/json',
@@ -58,15 +73,20 @@ export default class Clients extends Component<{}> {
 
       if (this.state.isLoading) {
         return(
+
             <View style = {{flex: 1, paddingTop: 20}}>
               <ActivityIndicator />
             </View>
+
         );
       }
 
       return(
+
         <View>
+
           <List>
+
             <FlatList
               data = {this.state.data}
               renderItem = {({ item }) => (
@@ -81,6 +101,7 @@ export default class Clients extends Component<{}> {
             />
 
           </List>
+
         </View>
       );
     }
